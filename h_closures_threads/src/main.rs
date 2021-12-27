@@ -110,12 +110,13 @@ fn main() {
     let (tx, rx) = channel::unbounded();
  
     // Clone rx side as to be handled by multiple threads
-    // let tx2 = tx.clone();
+    let tx2 = tx.clone();
     let rx2 = rx.clone();
 
     for number in my_vector {
         pause_ms(200);
         tx.send(number).unwrap();
+        tx2.send(number).unwrap();
         println!("Main thread: Value {}", number);
     }
 
