@@ -25,7 +25,9 @@
 //
 //let positive_number: u32 = some_string.parse().expect("Failed to parse a number");
 
-use mirage::{blur, brighten, crop, rotate, invert, grayscale, generate, fractal};
+use mirage::{
+    img_functions::{blur, brighten, crop, rotate, invert, grayscale, generate, fractal},
+    super_challenge::{super_challenge}};
 
 fn main() {
     // 1. First, you need to implement some basic command-line argument handling
@@ -38,6 +40,7 @@ fn main() {
     if args.is_empty() {
         print_usage_and_exit();
     }
+    // do not remove the first argument
     let subcommand = &args[0];
     match subcommand.as_str() {
         // blur
@@ -46,7 +49,7 @@ fn main() {
             if args.len() != 4 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let infile = args.remove(0);
             let outfile = args.remove(0);
             // 3rd argument is blur value in f32
@@ -59,7 +62,7 @@ fn main() {
             if args.len() != 4 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let infile = args.remove(0);
             let outfile = args.remove(0);
             let bright_val: i32 = args.remove(0).parse().expect("Failed to parse a number");
@@ -72,7 +75,7 @@ fn main() {
             if args.len() != 7 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let infile = args.remove(0);
             let outfile = args.remove(0);
             // x and y origin of crop
@@ -90,7 +93,7 @@ fn main() {
             if args.len() != 4 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let infile = args.remove(0);
             let outfile = args.remove(0);
             let degrees: u32 = args.remove(0).parse().expect("Failed to parse a number");
@@ -103,7 +106,7 @@ fn main() {
             if args.len() != 3 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let infile = args.remove(0);
             let outfile = args.remove(0);
             invert(infile, outfile);
@@ -115,7 +118,7 @@ fn main() {
             if args.len() != 3 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let infile = args.remove(0);
             let outfile = args.remove(0);
             grayscale(infile, outfile);
@@ -127,7 +130,7 @@ fn main() {
             if args.len() != 2 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let outfile = args.remove(0);
             fractal(outfile);
         }
@@ -138,7 +141,7 @@ fn main() {
             if args.len() != 5 {
                 print_usage_and_exit();
             }
-            let process_name = args.remove(0);
+            let _process_name = args.remove(0);
             let outfile = args.remove(0);
             let red: u8 = args.remove(0).parse().expect("Failed to parse a number");
             let green: u8 = args.remove(0).parse().expect("Failed to parse a number");
@@ -147,8 +150,47 @@ fn main() {
         }
 
         // For everything else...
+        // **SUPER CHALLENGE FOR LATER** - Let's face it, you don't have time for this during class.
+        //
+        // Make all of the subcommands stackable!
+        //
+        // For example, if you run:
+        //
+        //   cargo run infile.png outfile.png blur 2.5 invert rotate 180 brighten 10
+        //
+        // ...then your program would:
+        // - read infile.png
+        // - apply a blur of 2.5
+        // - invert the colors
+        // - rotate the image 180 degrees clockwise
+        // - brighten the image by 10
+        // - and write the result to outfile.png
+        //
+        // Good luck!
         _ => {
-            print_usage_and_exit();
+            if args.len() != 9 {
+                print_usage_and_exit();
+            }
+            let infile = args.remove(0);
+            let outfile = args.remove(0);
+            let blur = args.remove(0);
+            let blur_val: f32 = args.remove(0).parse().expect("Failed to parse a number");
+            let invert = args.remove(0);
+            let rotate = args.remove(0);
+            let degrees: u32 = args.remove(0).parse().expect("Failed to parse a number");
+            let brighten = args.remove(0);
+            let bright_val: i32 = args.remove(0).parse().expect("Failed to parse a number");
+            super_challenge(
+                infile,
+                outfile,
+                blur, 
+                blur_val,
+                invert,
+                rotate,
+                degrees,
+                brighten,
+                bright_val
+            );
         }
     }
 }
@@ -158,26 +200,6 @@ fn print_usage_and_exit() {
     println!("blur INFILE OUTFILE");
     // **OPTION**
     // Print useful information about what subcommands and arguments you can use
-    // println!("...");
+    println!("or refer to the example command line arguments in main.rs");
     std::process::exit(-1);
 }
-
-
-
-// **SUPER CHALLENGE FOR LATER** - Let's face it, you don't have time for this during class.
-//
-// Make all of the subcommands stackable!
-//
-// For example, if you run:
-//
-//   cargo run infile.png outfile.png blur 2.5 invert rotate 180 brighten 10
-//
-// ...then your program would:
-// - read infile.png
-// - apply a blur of 2.5
-// - invert the colors
-// - rotate the image 180 degrees clockwise
-// - brighten the image by 10
-// - and write the result to outfile.png
-//
-// Good luck!
